@@ -13,7 +13,9 @@ router.use(function (req, res, next) {
   });
   req.on('end', function () {
     bodyString = bodyString || '{}';
+   console.log("This is :", bodyString)
     req.body = eval('(' + bodyString + ')');
+     console.log("This is req.body: ", req.body)
     next();
   });
 });
