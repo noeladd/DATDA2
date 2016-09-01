@@ -17,6 +17,9 @@ router.param('id', function (req, res, next, id) {
 });
 
 router.get('/', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   Story.findAll({
     include: [{model: User, as: 'author'}],
     attributes: {exclude: ['paragraphs']}
@@ -25,9 +28,13 @@ router.get('/', function (req, res, next) {
     res.json(stories);
   })
   .catch(next);
+  }
 });
 
 router.post('/', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   Story.create(req.body)
   .then(function (story) {
     return story.reload({include: [{model: User, as: 'author'}]});
@@ -36,26 +43,36 @@ router.post('/', function (req, res, next) {
     res.status(201).json(includingAuthor);
   })
   .catch(next);
+  }
 });
 
 router.get('/:id', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   req.story.reload({include: [{model: User, as: 'author'}]})
   .then(function (story) {
     res.json(story);
   })
   .catch(next);
+  }
 });
 
 router.put('/:id', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   req.story.update(req.body)
   .then(function (story) {
     res.json(story);
   })
   .catch(next);
+  }
 });
 
 router.delete('/:id', function (req, res, next) {
-  if (req.get('User-Agent').includes('curl') ){
+  console.log("This is the Postman Header: ", req.get('User-Agent'));
+  if (req.get('User-Agent').includes('curl' || 'PostmanRuntime') ){
     res.status(403).end();
   } else {
   req.story.destroy()

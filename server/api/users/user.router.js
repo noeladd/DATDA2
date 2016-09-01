@@ -7,6 +7,9 @@ var User = require('./user.model');
 var Story = require('../stories/story.model');
 
 router.param('id', function (req, res, next, id) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   User.findById(id)
   .then(function (user) {
     if (!user) throw HttpError(404);
@@ -14,14 +17,19 @@ router.param('id', function (req, res, next, id) {
     next();
   })
   .catch(next);
+  }
 });
 
 router.get('/', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   User.findAll({})
   .then(function (users) {
     res.json(users);
   })
   .catch(next);
+  }
 });
 
 router.post('/', function (req, res, next) {
@@ -33,19 +41,27 @@ router.post('/', function (req, res, next) {
 });
 
 router.get('/:id', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   req.requestedUser.reload({include: [Story]})
   .then(function (requestedUser) {
     res.json(requestedUser);
   })
   .catch(next);
+  }
 });
 
 router.put('/:id', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   req.requestedUser.update(req.body)
   .then(function (user) {
     res.json(user);
   })
   .catch(next);
+  }
 });
 
 router.delete('/:id', function (req, res, next) {

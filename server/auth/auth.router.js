@@ -6,6 +6,9 @@ var HttpError = require('../utils/HttpError');
 var User = require('../api/users/user.model');
 
 router.post('/login', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   User.findOne({
     where: req.body
   })
@@ -17,9 +20,13 @@ router.post('/login', function (req, res, next) {
     });
   })
   .catch(next);
+  }
 });
 
 router.post('/signup', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   User.create(req.body)
   .then(function (user) {
     req.login(user, function (err) {
@@ -28,10 +35,15 @@ router.post('/signup', function (req, res, next) {
     });
   })
   .catch(next);
+  }
 });
 
 router.get('/me', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   res.json(req.user);
+  }
 });
 
 router.delete('/me', function (req, res, next) {
@@ -40,6 +52,7 @@ router.delete('/me', function (req, res, next) {
   } else {
   req.logout();
   res.status(204).end();
+  }
 });
 
 router.use('/google', require('./google.oauth'));

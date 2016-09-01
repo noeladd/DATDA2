@@ -48,6 +48,7 @@ app.factory('Story', function ($http) {
   };
 
   Story.prototype.destroy = function () {
+    
     return $http.delete(this.getUrl());
   };
 
