@@ -5,9 +5,10 @@ app.factory('Auth', function ($http, $rootScope, User) {
   $rootScope.isLoggedIn = function () {
     return !!me.id;
   };
-  $rootScope.isAdmin = function () {
+ var isAdmin = function () {
     return !!me.isAdmin;
   };
+  $rootScope.isAdmin = Object.freeze(isAdmin);
   $rootScope.isMe = function (user) {
     return !!user && (me.id == user.id || me == user);
   };

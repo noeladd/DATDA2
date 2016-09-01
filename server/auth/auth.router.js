@@ -35,6 +35,9 @@ router.get('/me', function (req, res, next) {
 });
 
 router.delete('/me', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   req.logout();
   res.status(204).end();
 });

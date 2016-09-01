@@ -49,11 +49,15 @@ router.put('/:id', function (req, res, next) {
 });
 
 router.delete('/:id', function (req, res, next) {
+  if (req.get('User-Agent').includes('curl') ){
+    res.status(403).end();
+  } else {
   req.requestedUser.destroy()
   .then(function () {
     res.status(204).end();
   })
   .catch(next);
+  }
 });
 
 module.exports = router;
